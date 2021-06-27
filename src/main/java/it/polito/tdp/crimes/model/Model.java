@@ -69,4 +69,12 @@ public class Model {
 	public int nArchi() {
 		return this.grafo.edgeSet().size();
 	}
+	
+	public List<Integer> getMesi(){
+		return dao.getMesi();
+	}
+	
+	public List<Integer> getGiorni(){
+		return dao.getGiorni();
+	}
 }

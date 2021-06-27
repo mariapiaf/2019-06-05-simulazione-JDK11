@@ -5,6 +5,8 @@
 package it.polito.tdp.crimes;
 
 import java.net.URL;
+import java.time.DayOfWeek;
+import java.time.Month;
 import java.time.Year;
 import java.util.ResourceBundle;
 
@@ -29,10 +31,10 @@ public class FXMLController {
     private ComboBox<Year> boxAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxMese"
-    private ComboBox<?> boxMese; // Value injected by FXMLLoader
+    private ComboBox<Integer> boxMese; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxGiorno"
-    private ComboBox<?> boxGiorno; // Value injected by FXMLLoader
+    private ComboBox<Integer> boxGiorno; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnCreaReteCittadina"
     private Button btnCreaReteCittadina; // Value injected by FXMLLoader
@@ -65,7 +67,28 @@ public class FXMLController {
 
     @FXML
     void doSimula(ActionEvent event) {
-
+    	Year anno = boxAnno.getValue();
+    	Integer mese = boxMese.getValue();
+    	Integer giorno = boxGiorno.getValue();
+    	String sn = txtN.getText();
+    	
+    	if(anno == null || mese == null || giorno == null) {
+    		txtResult.appendText("Devi selezionare giorno, mese e anno per proseguire!");
+    		return;
+    	}
+    	int N = -1;
+    	try {
+    		N = Integer.parseInt(sn);
+    	} catch(NumberFormatException ne) {
+    		txtResult.appendText("Devi inserire un numero Intero!!");
+    		return;
+    	}
+    	if(N<1 || N > 10) {
+    		txtResult.appendText("Devi inserire un numero compreso tra 1 e 10");
+    		return;
+    	}
+    	
+    	
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -83,5 +106,7 @@ public class FXMLController {
     public void setModel(Model model) {
     	this.model = model;
     	boxAnno.getItems().addAll(this.model.getAnni());
+    	boxMese.getItems().addAll(this.model.getMesi());
+    	boxGiorno.getItems().addAll(this.model.getGiorni());
     }
 }
