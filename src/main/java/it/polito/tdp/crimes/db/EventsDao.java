@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,5 +57,125 @@ public class EventsDao {
 			return null ;
 		}
 	}
+	
+	public List<Integer> getVertici() {
+		String sql = "SELECT DISTINCT district_id "
+				+ "FROM events";
+		
+		try {
+			Connection conn = DBConnect.getConnection() ;
 
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			
+			List<Integer> list = new ArrayList<>() ;
+			
+			ResultSet res = st.executeQuery() ;
+			
+			while(res.next()) {
+				try {
+					list.add(res.getInt("district_id"));
+				} catch (Throwable t) {
+					t.printStackTrace();
+					System.out.println(res.getInt("id"));
+				}
+			}
+			
+			conn.close();
+			return list ;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null ;
+		}
+	}
+	
+	public Double getMediaLat(Year anno, Integer distretto) {
+		String sql = "SELECT AVG(geo_lat) AS media "
+				+ "FROM events "
+				+ "WHERE YEAR(reported_date) = ? AND district_id = ?";
+		
+		try {
+			Connection conn = DBConnect.getConnection() ;
+
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			st.setInt(1, anno.getValue());
+			st.setInt(2, distretto);
+			
+			ResultSet res = st.executeQuery() ;
+			
+			Double result = 0.0;
+			
+			if(res.next()) {
+				result = res.getDouble("media");
+			}
+			
+			conn.close();
+			return result ;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null ;
+		}
+	}
+	
+	public Double getMediaLong(Year anno, Integer distretto) {
+		String sql = "SELECT AVG(geo_lon) AS media "
+				+ "FROM events "
+				+ "WHERE YEAR(reported_date) = ? AND district_id = ?";
+		
+		try {
+			Connection conn = DBConnect.getConnection() ;
+
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			st.setInt(1, anno.getValue());
+			st.setInt(2, distretto);
+			
+			ResultSet res = st.executeQuery() ;
+			
+			Double result = 0.0;
+			
+			if(res.next()) {
+				result = res.getDouble("media");
+			}
+			
+			conn.close();
+			return result ;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null ;
+		}
+	}
+	
+	public List<Year> getAnni() {
+		String sql = "SELECT DISTINCT YEAR(reported_date) AS anno "
+				+ "FROM events";
+		
+
+		try {
+			Connection conn = DBConnect.getConnection() ;
+
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			
+			List<Year> list = new ArrayList<>() ;
+			
+			ResultSet res = st.executeQuery() ;
+			
+			while(res.next()) {
+				int anno = res.getInt("anno");
+				list.add(Year.of(anno));
+			}
+			conn.close();
+			return list ;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null ;
+		}
+		
+	}
 }

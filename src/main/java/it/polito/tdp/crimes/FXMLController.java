@@ -5,6 +5,7 @@
 package it.polito.tdp.crimes;
 
 import java.net.URL;
+import java.time.Year;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.crimes.model.Model;
@@ -25,7 +26,7 @@ public class FXMLController {
     private URL location;
 
     @FXML // fx:id="boxAnno"
-    private ComboBox<?> boxAnno; // Value injected by FXMLLoader
+    private ComboBox<Year> boxAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxMese"
     private ComboBox<?> boxMese; // Value injected by FXMLLoader
@@ -48,6 +49,18 @@ public class FXMLController {
     @FXML
     void doCreaReteCittadina(ActionEvent event) {
 
+    	txtResult.clear();
+    	Year anno = boxAnno.getValue();
+    	if(anno == null) {
+    		txtResult.appendText("Devi scegliere un anno");
+    		return;
+    	}
+    	
+    	this.model.creaGrafo(anno);
+    	txtResult.appendText("GRAFO CREATO! \n");
+    	txtResult.appendText("# VERTICI: " + this.model.nVertici()+"\n");
+    	txtResult.appendText("# ARCHI: " + this.model.nArchi());
+    	
     }
 
     @FXML
@@ -69,5 +82,6 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	boxAnno.getItems().addAll(this.model.getAnni());
     }
 }
